@@ -36,7 +36,8 @@ def dump_tweet_information(tweet_chunk: list, config: Config, twython_connector:
         for tweet in tweet_chunk:
             tweet_object = tweet_objects_map[str(tweet.tweet_id)]
             if tweet_object:
-                dump_dir = "{}/{}/{}/{}".format(config.dump_location, tweet.news_source, tweet.label, tweet.news_id)
+                # root/gossipcop_fake_all/gossipcop-fake/news_id/tweets/ .. 
+                dump_dir = "{}/{}_{}/{}_ctr/{}".format(config.dump_root, tweet.news_source, tweet.label, tweet.news_source,tweet.news_id)
                 tweet_dir = "{}/tweets".format(dump_dir)
                 create_dir(dump_dir)
                 create_dir(tweet_dir)
@@ -55,10 +56,8 @@ def dump_tweet_information(tweet_chunk: list, config: Config, twython_connector:
 def collect_tweets(news_list, news_source, label, config: Config):
 
     create_dir(config.dump_root)
-    create_dir("{}/{}_{}_all".format(config.dump_root, news_source, label))
-    create_dir("{}/{}_{}_all/{}-{}".format(config.dump_root, news_source, label,news_source, label))
-
-    save_dir = "{}/{}_{}_all/{}-{}".format(config.dump_root, news_source, label,news_source, label)
+    create_dir("{}/{}_{}".format(config.dump_root, news_source, label))
+    create_dir("{}/{}_{}/{}_ctr".format(config.dump_root, news_source, label,news_source))
 
     tweet_id_list = []
 

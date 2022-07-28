@@ -27,7 +27,7 @@ def dump_retweets_job(tweet: Tweet, config: Config, twython_connector: TwythonCo
 
     retweet_obj = {"retweets": retweets}
 
-    dump_dir = "{}/{}/{}/{}".format(config.dump_location, tweet.news_source, tweet.label, tweet.news_id)
+    dump_dir = "{}/{}_{}/{}_ctr/{}".format(config.dump_root, tweet.news_source, tweet.label, tweet.news_source,tweet.news_id)
     retweet_dir = "{}/retweets".format(dump_dir)
     create_dir(dump_dir)
     create_dir(retweet_dir)
@@ -36,10 +36,10 @@ def dump_retweets_job(tweet: Tweet, config: Config, twython_connector: TwythonCo
 
 def collect_retweets(news_list, news_source, label, config: Config):
     create_dir(config.dump_root)
-    create_dir("{}/{}_{}_all".format(config.dump_root, news_source, label))
-    create_dir("{}/{}_{}_all/{}-{}".format(config.dump_root, news_source, label,news_source, label))
+    create_dir("{}/{}_{}".format(config.dump_root, news_source, label))
+    create_dir("{}/{}_{}/{}_ctr".format(config.dump_root, news_source, label,news_source))
 
-    save_dir = "{}/{}_{}_all/{}-{}".format(config.dump_root, news_source, label,news_source, label)
+    save_dir = "{}/{}_{}/{}_ctr".format(config.dump_root, news_source, label,news_source)
     tweet_id_list = []
 
     for news in news_list:
