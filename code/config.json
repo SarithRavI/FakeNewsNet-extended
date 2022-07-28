@@ -1,13 +1,13 @@
 {
-  "dump_root" :"upfd_2.0_dataset",
+  "dump_root" :"../upfd-2.0",
 
   "dataset_dir": "../dataset",
 
   "tweet_keys_file": "resources/tweet_keys_file.json", 
 
-  "num_process": 60,
+  "num_process": 10,
   
-  "num_twitter_keys": 6,
+  "num_twitter_keys": 1,
 
   "data_collection_choice": [
     {
@@ -16,5 +16,5 @@
     }
   ],
 
-  "data_features_to_collect" : ["user_followers"]
+  "data_features_to_collect" : ["news_articles", "tweets", "retweets", "user_profile", "user_timeline_tweets", "user_followers", "user_following"]
 }
