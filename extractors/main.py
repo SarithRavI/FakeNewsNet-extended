@@ -1,5 +1,5 @@
 from PostProcessData import PostData
-from user_tweet_data_extraction import extract_tweet_data
+from user_tweet_data_extraction import extract_tweet_data,extract_spacy_data
 from user_pg_data_extraction import extract_pg_data
 
 def postProcess(ds):  # type is vis or spacy
@@ -35,9 +35,16 @@ def postProcessSpacy(ds):  # type is vis or spacy
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-
-    postProcess("gossipcop")
+    # startup tweet extraction
+    # postProcess("gossipcop")
     # extract_tweet_data("gossipcop")
-    extract_pg_data("gossipcop")
+
+    # startup pg extraction
+    # postProcess("gossipcop")
+    # extract_pg_data("gossipcop")
+
+    # startup spacy data extraction
+    postProcessSpacy("gossipcop")
+    extract_spacy_data("gossipcop")
 
 
