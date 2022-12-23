@@ -1,5 +1,6 @@
 from PostProcessData import PostData
 from user_tweet_data_extraction import extract_tweet_data
+from user_pg_data_extraction import extract_pg_data
 
 def postProcess(ds):  # type is vis or spacy
     config = {"root_tweet_node_mapping": "../utils/tweet_node_mapping",
@@ -36,6 +37,7 @@ def postProcessSpacy(ds):  # type is vis or spacy
 if __name__ == '__main__':
 
     postProcess("gossipcop")
-    extract_tweet_data("gossipcop")
+    # extract_tweet_data("gossipcop")
+    extract_pg_data("gossipcop")
 
 
