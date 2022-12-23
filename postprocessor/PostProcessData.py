@@ -3,7 +3,7 @@ import numpy as np
 import json
 from multiprocessing.pool import Pool
 from tqdm import tqdm
-from helpers.SentimentAnalysis import SentimentAnalyzer
+from util.SentimentAnalysis import SentimentAnalyzer
 import spacy
 class PostData:
     def __init__(self, config):
