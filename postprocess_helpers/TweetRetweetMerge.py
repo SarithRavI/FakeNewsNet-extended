@@ -9,6 +9,9 @@ import random
 class TweetRetweetMerge:
     def __init__(self, config):
         self.config = config
+        # gos_node_user_news_mapping.csv
+        self.config['node_user_news_mapping_file'] = f'{self.config["init_dir_root"]}/node_user_mappings/{self.config["dataset"][:3]}_node_user_news_mapping.csv'
+
 
     # root_test1 = "{}/{}".format(config['root_utils'], config['news_file'])
 

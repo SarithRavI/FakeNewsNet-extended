@@ -9,6 +9,8 @@ from tqdm import tqdm
 class ExtractMentionGraphIndex:
     def __init__(self, config):
         self.config = config
+        self.config["root_upfd"] = "../code/upfd_dataset"
+        self.config["dump_root"] = f'{self.config["init_dir_root"]}/news_user_mention_graph'
         self.label = None
 
     def search_timeline(self, users):
@@ -25,6 +27,7 @@ class ExtractMentionGraphIndex:
 
         try:
             with open(
+                    # ../code/upfd/gossipcop_real_all/user_timeline_tweets
                     "{}/{}_{}_all/user_timeline_tweets/{}.json".format(
                         self.config["root_upfd"],self.config["dataset"],self.label, 
                         users[0]
@@ -71,7 +74,7 @@ class ExtractMentionGraphIndex:
         # get labeled users
         for label in self.config["label"]:
             self.label = label
-            labeled_news_user_groups = getLabeledUsers(self.config["dataset"], label)
+            labeled_news_user_groups = getLabeledUsers(self.config["dataset"], label,self.config["init_dir_root"])
             mention_graph_indices = []
             for i in tqdm(range(len(labeled_news_user_groups))):
                 mention_graph_indices.append(self.search_news(

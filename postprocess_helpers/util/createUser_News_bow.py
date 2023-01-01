@@ -9,8 +9,9 @@ def createUser_News_bow(config):
         shrt_key = 'pol'
     elif config["dataset"] == "gossipcop":
         shrt_key = 'gos'
-
-    node_user_news_mapping = pd.read_csv("{}/node_user_mappings/{}_node_user_news_mapping.csv".format(config["root_utils"], shrt_key))
+        
+    config["dump_location_root"] = f'{config["init_root"]}/users_bow'
+    node_user_news_mapping = pd.read_csv("{}/node_user_mappings/{}_node_user_news_mapping.csv".format(config["init_dir_root"], shrt_key))
     # news_user_groups = node_user_news_mapping.groupby('news_id', sort=False)['user_id'].apply(list)
 
     df = pd.read_csv("{}/{}_{}.csv".format(config["dataset_root"], config["dataset"], config["label"]))

@@ -9,7 +9,7 @@ import os
 
 def fillMissingProfileTimeline(config):
     user_bow_mask = pd.read_csv(
-        "{}/users_bow/{}_{}_users_bow.csv".format(config['root_utils'], config["dataset"], config["label"]))
+        "{}/users_bow/{}_{}_users_bow.csv".format(config['init_dir_root'], config["dataset"], config["label"]))
 
     tasks = config["task"]
     profile_missing_sub_dict = {}
