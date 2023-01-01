@@ -74,6 +74,7 @@ from fillMissingProfileTimeline import fillMissingProfileTimeline
 from TweetNodeMapping import TweetNodeMapper
 from ExtractMentionGraphIndex import ExtractMentionGraphIndex
 
+
 def extractMentionGraphs():
     config = {
         "dataset": "politifact",
