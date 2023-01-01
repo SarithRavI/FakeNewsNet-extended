@@ -15,7 +15,9 @@ lxml
 MarkupSafe
 newspaper3k
 nltk
+numpy
 oauthlib
+pandas
 Pillow
 python-dateutil
 PyYAML
@@ -25,8 +27,11 @@ requests-oauthlib
 singledispatch
 six
 soupsieve
+spacy
+textblob
 tinysegmenter
 tldextract
+vaderSentiment
 tqdm
 twython
 urllib3
