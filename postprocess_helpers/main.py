@@ -28,11 +28,11 @@ def extractMentionGraphs(dataset):
     graph_extractor = ExtractMentionGraphIndex(config)
     graph_extractor.getMentionGraphIndex()
 
-def merge():
+def merge(dataset):
     config = {
-        'node_user_news_mapping_file': 'C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/utils'
-                                       '/pol_node_user_news_mapping.csv',
-        'news_file': 'C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/utils/test_news7',
+        'dataset' : dataset,
+        'node_user_news_mapping_file': '..',
+        'news_file': '..',
         # change the num of processes
         'num_process': 12}
 
@@ -120,7 +120,12 @@ def main():
     
     for inp_dataset in dataset:
         for inp_label in label:
-            pass 
+             mapTweetNode(inp_dataset,inp_label) 
+             createBow(inp_dataset,inp_label)
+             fillMissing(inp_dataset,inp_label)
+    
+    for inp_dataset in dataset:
+        merge(inp_dataset) 
 
     for inp_dataset in dataset:
         extractMentionGraphs(inp_dataset) 
@@ -135,12 +140,5 @@ def main():
                        
 if __name__ == "__main__":
     main()
-    # mapTweetNode() 
-    # createBow()
-    # fillMissing()
 
-    # merge()
-  
-
-    # extractMentionGraphs()
 
