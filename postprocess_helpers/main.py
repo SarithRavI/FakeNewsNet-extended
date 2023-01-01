@@ -1,11 +1,13 @@
 import os
 from TweetRetweetMerge import TweetRetweetMerge
 from util.createUser_News_bow import createUser_News_bow
-from fillMissingProfileTimeline import fillMissingProfileTimeline
+from FillMissingProfileTimeline import fillMissingProfileTimeline
 from TweetNodeMapping import TweetNodeMapper
 from ExtractMentionGraphIndex import ExtractMentionGraphIndex
 from util import createNode_User_News_Mapping
 
+import os
+import shutil
 import argparse
 from enum import Enum
 
@@ -17,20 +19,20 @@ class Label(Enum):
     REAL = "real"  
     FAKE = "fake"
 
-def extractMentionGraphs(dataset):
+def extractMentionGraphs(dataset,init_dir):
     config = {
         "dataset": dataset,
         "label": ["real", "fake"],
         "num_process": 30,
-        'init_dir_root': 'init_dir',
+        'init_dir_root': init_dir,
     }
     graph_extractor = ExtractMentionGraphIndex(config)
     graph_extractor.getMentionGraphIndex()
 
-def merge(dataset):
+def merge(dataset,init_dir):
     config = {
         'dataset' : dataset,
-        'init_dir_root': 'init_dir',
+        'init_dir_root': init_dir,
         'num_process': 12}
     config["news_file"] = "../code/upfd_dataset/{}_{}_all/{}/{}".format(config["dataset"],
                                      config["label"],config["dataset"],config["label"])
@@ -41,17 +43,17 @@ def merge(dataset):
     merger.generate(list(missing_uid_nid))
 
 
-def createBow(dataset,label):
+def createBow(dataset,label,init_dir):
     config = {'dataset_root': '../../dataset',
-              'init_dir_root': 'init_dir',
+              'init_dir_root': init_dir,
               'dataset': dataset,
               'label': label,
               }
     createUser_News_bow(config)
 
-def mapTweetNode(dataset,label):
+def mapTweetNode(dataset,label,init_dir):
     config = { "dataset_root": "../dataset",
-              'init_dir_root': 'init_dir',
+              'init_dir_root': init_dir,
               "dataset": dataset,
               "label": label
             }
@@ -62,18 +64,18 @@ def mapTweetNode(dataset,label):
     df.to_csv("{}/tweet_node_mapping/df_{}_{}.csv".format(config['init_dir_root'],config["dataset"][:3],config["label"]),index=False)
 
 
-def fillMissing(dataset,label):
-    config = {'init_dir_root': 'init_dir',
+def fillMissing(dataset,label,init_dir):
+    config = {'init_dir_root': init_dir,
               'dataset': dataset,
               'label': label,
               "task": ["profile_mask","tl_mask"]
               }
     fillMissingProfileTimeline(config)
 
-def createNodeUserNewsMapping(dataset):
+def createNodeUserNewsMapping(dataset,init_dir):
         config = {
               'dataset':dataset,
-              'init_dir_root': 'init_dir'
+              'init_dir_root': init_dir
               }
         createNode_User_News_Mapping.createNodeUserNewsMapping(config)
 
@@ -86,6 +88,8 @@ def main():
                         help='which dataset to be used: pol for politifact. gos for gossipcop')
     parser.add_argument('--label', type=str, default=Label.REAL.value,
                         help='Indicate the label: real for true label. fake for false label')
+    parser.add_argument('--init_dir_root', type=str,
+                        help='root path of init_dir folder')
     
     args = parser.parse_args()
     print(args)
@@ -103,20 +107,35 @@ def main():
     elif args.label == 'all':
         label = [Label.REAL.value, Label.FAKE.value]
     
+    folder_ls = ['news_user_mention_graph',
+                'node_article_mappings',
+                'node_user_mappings',
+                'tweet_node_mapping',
+                'pkl_files',
+                'users_bow']
+
+    init_dir = args.init_dir_root
+
+    for folder in folder_ls:
+        os.makedirs(os.path.join(init_dir,folder),exist_ok=True)
+    
+    for file in os.listdir('util/pkl_files'):
+        shutil.copy2(f'util/pkl_files/{file}',f'{init_dir}/pkl_files')
+    
     for inp_dataset in dataset:
-        createNodeUserNewsMapping(inp_dataset) 
+        createNodeUserNewsMapping(inp_dataset,init_dir) 
     
     for inp_dataset in dataset:
         for inp_label in label:
-             mapTweetNode(inp_dataset,inp_label) 
-             createBow(inp_dataset,inp_label)
-             fillMissing(inp_dataset,inp_label)
+             mapTweetNode(inp_dataset,inp_label,init_dir) 
+             createBow(inp_dataset,inp_label,init_dir)
+             fillMissing(inp_dataset,inp_label,init_dir)
     
     for inp_dataset in dataset:
-        merge(inp_dataset) 
+        merge(inp_dataset,init_dir) 
 
     for inp_dataset in dataset:
-        extractMentionGraphs(inp_dataset) 
+        extractMentionGraphs(inp_dataset,init_dir) 
 
     # run postprocess_helpers\util\createNode_User_News_Mapping.py -done
     # mapTweetNode() -done
