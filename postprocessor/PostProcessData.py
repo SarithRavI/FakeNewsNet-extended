@@ -5,6 +5,7 @@ from multiprocessing.pool import Pool
 from tqdm import tqdm
 from util.SentimentAnalysis import SentimentAnalyzer
 import spacy
+
 class PostData:
     def __init__(self, config):
         self.config = config

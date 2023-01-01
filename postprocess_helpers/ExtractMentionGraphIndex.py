@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import json
-from helpers.labeled_users import getLabeledUsers
+from util.labeled_users import getLabeledUsers
 from multiprocessing.pool import Pool
 from tqdm import tqdm
 

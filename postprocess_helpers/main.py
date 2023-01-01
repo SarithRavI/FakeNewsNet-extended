@@ -1,82 +1,25 @@
-# from embed_users import fill_users
-#
-#
-# def search_timeline(users):
-#     graph_index_news = np.array([[], []], dtype='int64')
-#
-#     # in graph_index_news
-#     # 1st row has source users
-#     # 2nd row has destination users
-#
-#     def match_link(dest_user_id):
-#         if dest_user_id in users[1:]:
-#             nonlocal graph_index_news
-#             graph_index_news = np.append(graph_index_news, values=[[users[0]], [dest_user_id]], axis=1)
-#
-#     try:
-#         with open(
-#                 f"C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/code/"
-#                 f"upfd_dataset/gossipcop_users/real/user_timeline_tweets/{users[0]}.json",
-#                 'r') as f:
-#             user_timeline_tweets = json.load(f)
-#         for tweet in user_timeline_tweets:
-#             user_mentions = tweet['entities']['user_mentions']
-#             if len(user_mentions) != 0:
-#                 for user_dict in user_mentions:
-#                     match_link(user_dict['id'])
-#     except Exception as e:
-#         pass
-#         # print(f'{users[0]} timeline is not available')
-#     if not np.array_equal(graph_index_news, np.array([[], []])):
-#         return graph_index_news.tolist()
-#
-#
-# def search_news(news):
-#     user_arr = news
-#     result = np.array([[], []])
-#
-#     # in graph_index_news
-#     # 1st row has source users
-#     # 2nd row has destination users
-#
-#     def permut(i):
-#         head = [user_arr[i]]
-#         tail = np.delete(user_arr, i)
-#         return np.append(head, tail).tolist()
-#
-#     timeline_search_list = [permut(i) for i in range(len(user_arr))]
-#
-#     pool = Pool(6)
-#     res = pool.map(search_timeline, iterable=timeline_search_list)
-#
-#     pool.close()
-#     pool.join()
-#
-#     for el in res:
-#         if el is not None:
-#             result = np.append(np.array(result), np.array(el), axis=1).astype(np.int64)
-#     print(result.tolist())
-#
-#
-# def main():
-#     node_user_news_mapping = pd.read_csv(
-#         'C:/Users/MSI/FakeNewsNet-hpc/FakeNewsNet-master/utils/gos_node_user_news_mapping.csv')
-#     news_user_groups = node_user_news_mapping.groupby('news_id', sort=False)['user_id'].apply(list)
-#     search_news(list(set(news_user_groups[7])))
-#
-#
-# if __name__ == "__main__":
-#     fill_users()
 import os
 from TweetRetweetMerge import TweetRetweetMerge
-from helpers.createUser_News_bow import createUser_News_bow
+from util.createUser_News_bow import createUser_News_bow
 from fillMissingProfileTimeline import fillMissingProfileTimeline
 from TweetNodeMapping import TweetNodeMapper
 from ExtractMentionGraphIndex import ExtractMentionGraphIndex
+from util import createNode_User_News_Mapping
 
-def extractMentionGraphs():
+import argparse
+from enum import Enum
+
+class Dataset(Enum):
+    GOS = "gossipcop"
+    POL = "politifact"
+
+class Label(Enum):
+    REAL = "real"  
+    FAKE = "fake"
+
+def extractMentionGraphs(dataset):
     config = {
-        "dataset": "politifact",
+        "dataset": dataset,
         "label": ["real", "fake"],
         "num_process": 30,
         "root_upfd": "../code/upfd_dataset",
@@ -100,24 +43,24 @@ def merge():
     merger.generate(list(missing_uid_nid))
 
 
-def createBow():
+def createBow(dataset,label):
     config = {'dataset_root': '../dataset',
               'root_utils': '../utils',
               #'node_user_news_mapping_file': 'gos_node_user_news_mapping.csv',
               #'upfd_user_profiles_path': 'C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/utils/test_up',
               'dump_location_root': '../utils/users_bow',
-              'dataset': 'politifact',
-              'label': 'fake',
+              'dataset': dataset,
+              'label': label,
               }
     createUser_News_bow(config)
 
-def mapTweetNode():
+def mapTweetNode(dataset,label):
     config = {"util_root": '../utils',
               "dataset_root": "../dataset",
               #"news_file": "C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/code/upfd_dataset/gossipcop/real",
               "pickle_root": "pkl_files",
-              "dataset": "gossipcop",
-              "label": "real"
+              "dataset": dataset,
+              "label": label
             }
 
     mapper = TweetNodeMapper(config)
@@ -126,25 +69,78 @@ def mapTweetNode():
     df.to_csv("tweet_node_mapping/df_{}_{}.csv".format(config["dataset"][:3],config["label"]),index=False)
 
 
-def fillMissing():
+def fillMissing(dataset,label):
     config = {#'dataset_root': 'C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/dataset',
               'root_utils': '../utils',
               #'node_user_news_mapping_file': 'gos_node_user_news_mapping.csv',
               #'upfd_user_profiles_path': 'C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/utils/test_up',
               #'upfd_user_timeline_tweets_path': 'C:/Users/MSI/Fakenewsnet-hpc/FakeNewsNet-master/utils/test_up',
-              'dataset': 'politifact',
-              'label': 'fake',
+              'dataset': dataset,
+              'label': label,
               "task": ["profile_mask","tl_mask"]
               }
     fillMissingProfileTimeline(config)
 
+def createNodeUserMapping(dataset):
+        config = {
+              'dataset':dataset,
+              'pickle_root': "pkl_files",
+              'save_root': '../node_user_mappings',
+              }
+        createNode_User_News_Mapping.createNodeUserMapping(config)
 
+
+def main():
+    dataset = None 
+    label = None 
+    parser = argparse.ArgumentParser(description='Initiating the postprocessing')
+    parser.add_argument('--dataset', type=str, default=Dataset.GOS.value,
+                        help='which dataset to be used: pol for politifact. gos for gossipcop')
+    parser.add_argument('--label', type=str, default=Label.REAL.value,
+                        help='Indicate the label: real for true label. fake for false label')
+    
+    args = parser.parse_args()
+    print(args)
+
+    if args.dataset == 'gos':
+        dataset =[Dataset.GOS.value]
+    elif args.dataset == 'pol':
+        dataset = [Dataset.POL.value]
+    elif args.dataset == 'all':
+        dataset = [Dataset.GOS.value, Dataset.POL.value]
+    if args.label == 'real':
+        label = [Label.REAL.value]
+    elif args.label == 'fake':
+        label = [Label.FAKE.value]
+    elif args.label == 'all':
+        label = [Label.REAL.value, Label.FAKE.value]
+    
+    for inp_dataset in dataset:
+        createNodeUserMapping(inp_dataset) 
+    
+    for inp_dataset in dataset:
+        for inp_label in label:
+            pass 
+
+    for inp_dataset in dataset:
+        extractMentionGraphs(inp_dataset) 
+
+    # run postprocess_helpers\util\createNode_User_News_Mapping.py -done
+    # mapTweetNode() -done
+    # createBow() -done
+    # fillMissing() -done 
+    # merge() - not done 
+    # extractMentionGraphs() -done
+
+                       
 if __name__ == "__main__":
-    # mapTweetNode()
+    main()
+    # mapTweetNode() 
+    # createBow()
+    # fillMissing()
 
-    fillMissing()
     # merge()
-    #createBow()
+  
 
     # extractMentionGraphs()
 

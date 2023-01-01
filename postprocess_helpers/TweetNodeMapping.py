@@ -5,7 +5,7 @@ import json
 from tqdm import tqdm
 import os
 import pickle
-from helpers.createUser_News_bow import getMissingTweetNodeIds
+from util.createUser_News_bow import getMissingTweetNodeIds
 
 class TweetNodeMapper:
     def __init__(self,config):
