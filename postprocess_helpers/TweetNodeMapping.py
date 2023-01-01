@@ -10,12 +10,13 @@ from util.createUser_News_bow import getMissingTweetNodeIds
 class TweetNodeMapper:
     def __init__(self,config):
         self.config = config
+        self.config['pickle_root'] = f'{self.config["init_dir_root"]}/pkl_files'
         self.config["news_file"] = "../code/upfd_dataset/{}_{}_all/{}/{}".format(self.config["dataset"],
                                      self.config["label"],self.config["dataset"],self.config["label"])
 
         self.news_mapping_file = "{}_{}.csv".format(self.config["dataset"], self.config["label"])
         self.node_user_news_mapping = pd.read_csv(
-            "{}/node_user_mappings/{}_node_user_news_mapping.csv".format(self.config["util_root"], self.config["dataset"][:3]))
+            "{}/node_user_mappings/{}_node_user_news_mapping.csv".format(self.config["init_dir_root"], self.config["dataset"][:3]))
 
         self.news_user_groups = self.node_user_news_mapping.groupby('news_id', sort=False)['user_id'].apply(list)
         self.all_label_news = os.listdir(self.config["news_file"])
@@ -243,7 +244,7 @@ class TweetNodeMapper:
                                                         (self.nodes_expect.columns)]["node_id"].tolist()))
 
     def getNewsNodeMapping(self):
-        return pd.read_csv("{}/node_article_mappings/{}_node_article_mapping.csv".format(self.config["util_root"],self.config["dataset"][:3]))
+        return pd.read_csv("{}/node_article_mappings/{}_node_article_mapping.csv".format(self.config["init_dir_root"],self.config["dataset"][:3]))
 
     def fillMissingTweets(self, node_article_df, node_article_have_df):
 

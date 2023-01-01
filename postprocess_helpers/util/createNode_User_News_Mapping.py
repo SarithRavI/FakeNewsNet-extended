@@ -10,12 +10,12 @@ from tqdm import tqdm
 # dataset name
 
 
-def createNodeUserMapping(config):
+def createNodeUserNewsMapping(config):
     dataset = config['dataset']
     # root to pkl files
-    pkl_root =  config['pkl_root']
+    pkl_root =  f"{config['init_dir_root']}/pkl_files"
     # root to dumping location
-    save_root =  config['save_root']
+    save_root =  f"{config['init_dir_root']}/node_user_mappings"
 
     if dataset == 'gossipcop':
         pkl_str = 'gos'
