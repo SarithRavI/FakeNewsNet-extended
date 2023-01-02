@@ -65,30 +65,6 @@ def fillMissingProfileTimeline(config):
             col_id = max_idx_ls[i]
             sub_user_profile_id = true_task_df.iloc[col_id]['user_id']
 
-            # if task == "tl_mask":
-            
-            #     file_name = "user_timeline_tweets"
-
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
-            #         user_timeline_j = json.load(f1)
-
-            #     # dump the same file but user_id changed
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
-            #         json.dump(user_timeline_j, f2)
-
-            # elif task == "profile_mask":
-
-            #     file_name = "user_profiles"
-
-            #     # load the json file sub_user_profile_id
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
-            #         user_profile_j = json.load(f1)
-            #     user_profile_j["id"] = int(missing_user_profile)
-            #     user_profile_j["id_str"] = str(missing_user_profile)
-
-            #     # dump the same file but user_id changed
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
-            #         json.dump(user_profile_j, f2)
             if task == "tl_mask":
                 tl_missing_sub_dict[missing_user_profile] = sub_user_profile_id
             
@@ -115,7 +91,7 @@ def fillMissingProfileTimeline(config):
             #     # dump the same file but user_id changed
             #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
             #         json.dump(user_profile_j, f2)
-            
+
     target = "missing_sub/{}/profile_missing_sub.pickle".format(config["dataset"])
     if os.path.exists(target): 
         with open(target,"rb") as f1:
