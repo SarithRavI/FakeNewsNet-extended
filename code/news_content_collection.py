@@ -125,10 +125,10 @@ def crawl_news_article(url):
 def collect_news_articles(news_list, news_source, label, config: Config):
     
     create_dir(config.dump_root)
-    create_dir("{}/{}_{}".format(config.dump_root, news_source, label))
-    create_dir("{}/{}_{}/{}_ctr".format(config.dump_root, news_source, label,news_source))
+    create_dir("{}/{}".format(config.dump_root, news_source))
+    create_dir("{}/{}/{}".format(config.dump_root, news_source, label))
 
-    save_dir = "{}/{}_{}/{}_ctr".format(config.dump_root, news_source, label,news_source)
+    save_dir = "{}/{}/{}".format(config.dump_root, news_source, label)
 
     for news in tqdm(news_list):
         create_dir("{}/{}".format(save_dir, news.news_id))
