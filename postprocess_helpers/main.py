@@ -45,7 +45,7 @@ def merge(dataset,label,init_dir):
 
 
 def createBow(dataset,label,init_dir):
-    config = {'dataset_root': '../../dataset',
+    config = {'dataset_root': '../dataset',
               'init_dir_root': init_dir,
               'dataset': dataset,
               'label': label,

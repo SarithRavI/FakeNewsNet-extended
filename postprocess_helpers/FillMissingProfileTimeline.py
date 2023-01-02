@@ -7,6 +7,8 @@ import ast
 import pickle as pkl
 import os
 
+from util.util import create_dir
+
 def fillMissingProfileTimeline(config):
     user_bow_mask = pd.read_csv(
         "{}/users_bow/{}_{}_users_bow.csv".format(config['init_dir_root'], config["dataset"], config["label"]))
@@ -47,74 +49,84 @@ def fillMissingProfileTimeline(config):
             p2=np.sqrt(np.sum(B**2,axis=1))[np.newaxis,:]
             return num/(p1*p2)
 
-        if torch.cuda.is_available():
-            tensor1 = torch.tensor(fpbow_arr, dtype=torch.float32).cuda()
-            tensor2 = torch.tensor(tpbow_arr, dtype=torch.float32).cuda()
-            res = csm(tensor1, tensor2)
-            res_arr = res.cpu().numpy()
+        if fpbow_arr.shape[0] >0 and tpbow_arr.shape[0] > 0:
+            if torch.cuda.is_available():
+                tensor1 = torch.tensor(fpbow_arr, dtype=torch.float32).cuda()
+                tensor2 = torch.tensor(tpbow_arr, dtype=torch.float32).cuda()
+                res = csm(tensor1, tensor2)
+                res_arr = res.cpu().numpy()
+            else:
+                res_arr = csm_np(fpbow_arr,tpbow_arr)
+
+            max_index = np.argmax(res_arr, axis=1)
+            max_idx_ls = max_index.tolist()
+
+            path_to_all_users =  "../code/upfd_dataset/{}_{}_all".format(config["dataset"],config["label"])
+
+            for i in tqdm(range(len(false_task_df))):
+                missing_user_profile = false_task_df.iloc[i]['user_id']
+                col_id = max_idx_ls[i]
+                sub_user_profile_id = true_task_df.iloc[col_id]['user_id']
+
+                if task == "tl_mask":
+                    tl_missing_sub_dict[missing_user_profile] = sub_user_profile_id
+                
+                    file_name = "user_timeline_tweets"
+
+                    with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
+                        user_timeline_j = json.load(f1)
+
+                    # dump the same file but user_id changed
+                    with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
+                        json.dump(user_timeline_j, f2)
+
+                elif task == "profile_mask":
+                    profile_missing_sub_dict[missing_user_profile] = sub_user_profile_id
+
+                    file_name = "user_profiles"
+
+                    # load the json file sub_user_profile_id
+                    with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
+                        user_profile_j = json.load(f1)
+                    user_profile_j["id"] = int(missing_user_profile)
+                    user_profile_j["id_str"] = str(missing_user_profile)
+
+                    # dump the same file but user_id changed
+                    with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
+                        json.dump(user_profile_j, f2)
+
+    if len(profile_missing_sub_dict) != 0:
+        create_dir("{}/users_bow/missing_sub".format(config['init_dir_root']))
+        target_root =  "{}/users_bow/missing_sub/{}".format(config['init_dir_root'], config["dataset"])
+        create_dir(target_root)
+        target = "{}/profile_missing_sub.pickle".format(create_dir(target_root))
+        
+        if os.path.exists(target): 
+            with open(target,"rb") as f1:
+                profile_missing_sub_ = pkl.load(f1)
+            profile_missing_sub_.update(profile_missing_sub_dict)
+        
+            with open(target,"wb") as f1:
+                pkl.dump(profile_missing_sub_,f1)
         else:
-            res_arr = csm_np(fpbow_arr,tpbow_arr)
+            with open(target,"wb") as f1:
+                pkl.dump(profile_missing_sub_dict,f1)
 
-        max_index = np.argmax(res_arr, axis=1)
-        max_idx_ls = max_index.tolist()
+    if len(tl_missing_sub_dict) != 0:
+        create_dir("{}/users_bow/missing_sub".format(config['init_dir_root']))
+        target_root =  "{}/users_bow/missing_sub/{}".format(config['init_dir_root'], config["dataset"])
+        create_dir(target_root)
+        target = "{}/timeline_missing_sub.pickle".format(create_dir(target_root))
 
-        path_to_all_users =  "../code/upfd_dataset/{}_{}_all".format(config["dataset"],config["label"])
+        if os.path.exists(target):
+            with open(target,"rb") as f2:
+                tl_missing_sub_ = pkl.load(f2)
+            tl_missing_sub_.update(tl_missing_sub_dict)
 
-        for i in tqdm(range(len(false_task_df))):
-            missing_user_profile = false_task_df.iloc[i]['user_id']
-            col_id = max_idx_ls[i]
-            sub_user_profile_id = true_task_df.iloc[col_id]['user_id']
-
-            if task == "tl_mask":
-                tl_missing_sub_dict[missing_user_profile] = sub_user_profile_id
-            
-                file_name = "user_timeline_tweets"
-
-                with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
-                    user_timeline_j = json.load(f1)
-
-                # dump the same file but user_id changed
-                with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
-                    json.dump(user_timeline_j, f2)
-
-            elif task == "profile_mask":
-                profile_missing_sub_dict[missing_user_profile] = sub_user_profile_id
-
-                file_name = "user_profiles"
-
-                # load the json file sub_user_profile_id
-                with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
-                    user_profile_j = json.load(f1)
-                user_profile_j["id"] = int(missing_user_profile)
-                user_profile_j["id_str"] = str(missing_user_profile)
-
-                # dump the same file but user_id changed
-                with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
-                    json.dump(user_profile_j, f2)
-
-    target = "missing_sub/{}/profile_missing_sub.pickle".format(config["dataset"])
-    if os.path.exists(target): 
-        with open(target,"rb") as f1:
-            profile_missing_sub_ = pkl.load(f1)
-        profile_missing_sub_.update(profile_missing_sub_dict)
-    
-        with open(target,"wb") as f1:
-            pkl.dump(profile_missing_sub_,f1)
-    else:
-        with open(target,"wb") as f1:
-            pkl.dump(profile_missing_sub_dict,f1)
-
-
-    target = "missing_sub/{}/tl_missing_sub.pickle".format(config["dataset"])
-    if os.path.exists(target):
-        with open(target,"rb") as f2:
-            tl_missing_sub_ = pkl.load(f2)
-        tl_missing_sub_.update(tl_missing_sub_dict)
-
-        with open(target,"wb") as f2:
-            pkl.dump(tl_missing_sub_,f2)
-    else:        
-        with open(target,"wb") as f2:
-            pkl.dump(tl_missing_sub_dict,f2)
+            with open(target,"wb") as f2:
+                pkl.dump(tl_missing_sub_,f2)
+        else:        
+            with open(target,"wb") as f2:
+                pkl.dump(tl_missing_sub_dict,f2)
 
 
