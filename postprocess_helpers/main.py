@@ -23,7 +23,7 @@ def extractMentionGraphs(dataset,init_dir):
     config = {
         "dataset": dataset,
         "label": ["real", "fake"],
-        "num_process": 30,
+        "num_process": 4,
         'init_dir_root': init_dir,
     }
     graph_extractor = ExtractMentionGraphIndex(config)
@@ -34,7 +34,7 @@ def merge(dataset,label,init_dir):
         'dataset' : dataset,
         'init_dir_root': init_dir,
         'label':label,
-        'num_process': 12}
+        'num_process': 4}
     config["news_file"] = "../code/upfd_dataset/{}_{}_all/{}/{}".format(config["dataset"],
                                      config["label"],config["dataset"],config["label"])
     news_ls = os.listdir(config['news_file'])
