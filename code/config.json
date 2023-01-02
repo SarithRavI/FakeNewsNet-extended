@@ -1,7 +1,7 @@
 {
-  "dump_root" :"upfd_dataset/gossipcop_real_all",
+  "dump_root" :"upfd_dataset_testing/gossipcop_real_all",
 
-  "dataset_dir": "../dataset",
+  "dataset_dir": "../dataset/testing",
 
   "tweet_keys_file": "resources/tweet_keys_file.json", 
 
@@ -16,7 +16,7 @@
     }
   ],
 
-  "data_features_to_collect" : ["retweets"],
+  "data_features_to_collect" : ["user_following"],
   
   "rest":[ "news_articles","tweets", "retweets", "user_profile", "user_timeline_tweets", "user_followers", "user_following"]
 }

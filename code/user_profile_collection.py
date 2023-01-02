@@ -124,9 +124,9 @@ class UserProfileCollector(DataCollector):
 
         for choice in choices:
             all_user_ids.update(get_user_ids_in_folder(
-                "{}/{}_{}/{}_ctr".format(self.config.dump_root, choice["news_source"], choice["label"], choice["news_source"])))
+                "{}/{}/{}".format(self.config.dump_root, choice["news_source"], choice["label"])))
 
-        user_profiles_folder = "{}/{}_{}/{}".format(self.config.dump_root,choice["news_source"], choice["label"],"user_profiles")
+        user_profiles_folder = "{}/{}".format(self.config.dump_root,"user_profiles")
         create_dir(user_profiles_folder)
 
         multiprocess_data_collection(dump_user_profile_job, list(all_user_ids),
@@ -144,9 +144,9 @@ class UserTimelineTweetsCollector(DataCollector):
 
         for choice in choices:
             all_user_ids.update(get_user_ids_in_folder(
-                "{}/{}_{}/{}_ctr".format(self.config.dump_root, choice["news_source"], choice["label"], choice["news_source"])))
+                "{}/{}/{}".format(self.config.dump_root, choice["news_source"], choice["label"])))
 
-        user_timeline_tweets_folder = "{}/{}_{}/{}".format(self.config.dump_root,choice["news_source"], choice["label"], "user_timeline_tweets")
+        user_timeline_tweets_folder = "{}/{}".format(self.config.dump_root,"user_timeline_tweets")
         create_dir(user_timeline_tweets_folder)
 
         multiprocess_data_collection(dump_user_recent_tweets_job, list(all_user_ids), (user_timeline_tweets_folder,
@@ -164,9 +164,9 @@ class UserFollowersCollector(DataCollector):
 
         for choice in choices:
             all_user_ids.update(get_user_ids_in_folder(
-                "{}/{}_{}/{}_ctr".format(self.config.dump_root, choice["news_source"], choice["label"], choice["news_source"])))
+                "{}/{}/{}".format(self.config.dump_root, choice["news_source"], choice["label"])))
 
-        user_followers_folder = "{}/{}_{}/{}".format(self.config.dump_root,choice["news_source"], choice["label"], "user_followers")
+        user_followers_folder = "{}/{}".format(self.config.dump_root,"user_followers")
         create_dir(user_followers_folder)
 
         multiprocess_data_collection(dump_user_followers, list(all_user_ids), (user_followers_folder,
@@ -184,9 +184,9 @@ class UserFollowingCollector(DataCollector):
 
         for choice in choices:
             all_user_ids.update(get_user_ids_in_folder(
-                "{}/{}_{}/{}_ctr".format(self.config.dump_root, choice["news_source"], choice["label"], choice["news_source"])))
+                "{}/{}/{}".format(self.config.dump_root, choice["news_source"], choice["label"])))
 
-        user_friends_folder = "{}/{}_{}/{}".format(self.config.dump_root,choice["news_source"], choice["label"],"user_following")
+        user_friends_folder = "{}/{}".format(self.config.dump_root,"user_following")
         create_dir(user_friends_folder)
 
         multiprocess_data_collection(dump_user_following, list(all_user_ids), (user_friends_folder,
