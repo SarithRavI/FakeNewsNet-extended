@@ -6,6 +6,7 @@ from tqdm import tqdm
 import os
 import pickle
 from util.createUser_News_bow import getMissingTweetNodeIds
+from util.util import create_dir
 
 class TweetNodeMapper:
     def __init__(self,config):
@@ -376,7 +377,9 @@ class TweetNodeMapper:
         # check whether the tweet_node_mapping/df_missing_nodes/{}_missing_nodes.txt exist 
         # if not create it else leave it 
         # apppend self.missing missing nodes to the text file 
-        txt_file_path = "tweet_node_mapping/df_missing_nodes/{}_missing_nodes.txt".format(self.config["dataset"][:3])
+        dir = f"{self.config['init_dir_root']}/tweet_node_mapping/df_missing_nodes"
+        create_dir(dir)
+        txt_file_path = "{}/{}_missing_nodes.txt".format(dir,self.config["dataset"][:3])
         
         with open(txt_file_path,"a") as txtfile:
             for node in list(set(self.missing_nodes)):
