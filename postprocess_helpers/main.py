@@ -29,10 +29,11 @@ def extractMentionGraphs(dataset,init_dir):
     graph_extractor = ExtractMentionGraphIndex(config)
     graph_extractor.getMentionGraphIndex()
 
-def merge(dataset,init_dir):
+def merge(dataset,label,init_dir):
     config = {
         'dataset' : dataset,
         'init_dir_root': init_dir,
+        'label':label,
         'num_process': 12}
     config["news_file"] = "../code/upfd_dataset/{}_{}_all/{}/{}".format(config["dataset"],
                                      config["label"],config["dataset"],config["label"])
@@ -90,13 +91,15 @@ def main():
                         help='Indicate the label: real for true label. fake for false label')
     parser.add_argument('--init_dir_root', type=str,
                         help='root path of init_dir folder')
+    parser.add_argument('--testing', type=str,
+                        help='denote if testing : True or False')
     
     args = parser.parse_args()
     print(args)
 
-    if args.dataset == 'gos':
+    if 'gos' in args.dataset  :
         dataset =[Dataset.GOS.value]
-    elif args.dataset == 'pol':
+    elif 'pol' in args.dataset  :
         dataset = [Dataset.POL.value]
     elif args.dataset == 'all':
         dataset = [Dataset.GOS.value, Dataset.POL.value]
@@ -106,6 +109,8 @@ def main():
         label = [Label.FAKE.value]
     elif args.label == 'all':
         label = [Label.REAL.value, Label.FAKE.value]
+
+    isTest = eval(args.testing)
     
     folder_ls = ['news_user_mention_graph',
                 'node_article_mappings',
@@ -119,20 +124,26 @@ def main():
     for folder in folder_ls:
         os.makedirs(os.path.join(init_dir,folder),exist_ok=True)
     
-    for file in os.listdir('util/pkl_files'):
-        shutil.copy2(f'util/pkl_files/{file}',f'{init_dir}/pkl_files')
-    
+    if isTest:
+        for file in os.listdir('util/pkl_files_testing'):
+            shutil.copy2(f'util/pkl_files_testing/{file}',f'{init_dir}/pkl_files')
+    elif isTest == False:
+        for file in os.listdir('util/pkl_files'):
+            shutil.copy2(f'util/pkl_files/{file}',f'{init_dir}/pkl_files')
+
     for inp_dataset in dataset:
+        # gossipcop real
         createNodeUserNewsMapping(inp_dataset,init_dir) 
     
     for inp_dataset in dataset:
         for inp_label in label:
-             mapTweetNode(inp_dataset,inp_label,init_dir) 
-             createBow(inp_dataset,inp_label,init_dir)
-             fillMissing(inp_dataset,inp_label,init_dir)
+            merge(inp_dataset,inp_label,init_dir) 
+            mapTweetNode(inp_dataset,inp_label,init_dir) 
+            createBow(inp_dataset,inp_label,init_dir)
+            fillMissing(inp_dataset,inp_label,init_dir)
     
-    for inp_dataset in dataset:
-        merge(inp_dataset,init_dir) 
+    # for inp_dataset in dataset:
+    #     merge(inp_dataset,init_dir) 
 
     for inp_dataset in dataset:
         extractMentionGraphs(inp_dataset,init_dir) 
