@@ -1,5 +1,6 @@
 # local
 code/upfd_dataset
+postprocess_helpers/init_dir
 *.out
 
 # Byte-compiled / optimized / DLL files
