@@ -12,7 +12,7 @@ itsdangerous
 jieba3k
 Jinja2
 lxml
-MarkupSafe
+markupsafe
 newspaper3k
 nltk
 numpy
