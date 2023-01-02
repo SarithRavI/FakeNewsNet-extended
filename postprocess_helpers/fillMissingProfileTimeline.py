@@ -68,29 +68,29 @@ def fillMissingProfileTimeline(config):
             if task == "tl_mask":
                 tl_missing_sub_dict[missing_user_profile] = sub_user_profile_id
             
-            #     file_name = "user_timeline_tweets"
+                file_name = "user_timeline_tweets"
 
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
-            #         user_timeline_j = json.load(f1)
+                with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
+                    user_timeline_j = json.load(f1)
 
-            #     # dump the same file but user_id changed
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
-            #         json.dump(user_timeline_j, f2)
+                # dump the same file but user_id changed
+                with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
+                    json.dump(user_timeline_j, f2)
 
             elif task == "profile_mask":
                 profile_missing_sub_dict[missing_user_profile] = sub_user_profile_id
 
-            #     file_name = "user_profiles"
+                file_name = "user_profiles"
 
-            #     # load the json file sub_user_profile_id
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
-            #         user_profile_j = json.load(f1)
-            #     user_profile_j["id"] = int(missing_user_profile)
-            #     user_profile_j["id_str"] = str(missing_user_profile)
+                # load the json file sub_user_profile_id
+                with open("{}/{}/{}.json".format(path_to_all_users, file_name, sub_user_profile_id), "r") as f1:
+                    user_profile_j = json.load(f1)
+                user_profile_j["id"] = int(missing_user_profile)
+                user_profile_j["id_str"] = str(missing_user_profile)
 
-            #     # dump the same file but user_id changed
-            #     with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
-            #         json.dump(user_profile_j, f2)
+                # dump the same file but user_id changed
+                with open("{}/{}/{}.json".format(path_to_all_users, file_name, missing_user_profile), "x") as f2:
+                    json.dump(user_profile_j, f2)
 
     target = "missing_sub/{}/profile_missing_sub.pickle".format(config["dataset"])
     if os.path.exists(target): 
