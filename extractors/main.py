@@ -20,10 +20,10 @@ class Label(Enum):
     REAL = "real"  
     FAKE = "fake"
 
-def extractMentionGraphs(dataset,init_dir):
+def extractMentionGraphs(dataset,label_ls,init_dir):
     config = {
         "dataset": dataset,
-        "label": ["real", "fake"],
+        "label": label_ls,
         "num_process": 4,
         'init_dir_root': init_dir,
     }
@@ -168,7 +168,6 @@ def main():
             shutil.copy2(f'util/pkl_files/{file}',f'{init_dir}/pkl_files')
 
     for inp_dataset in dataset:
-        # gossipcop real
         createNodeUserNewsMapping(inp_dataset,init_dir) 
         createNodeNewsMapping(inp_dataset,init_dir)
     
@@ -179,11 +178,8 @@ def main():
             createBow(inp_dataset,inp_label,init_dir)
             fillMissing(inp_dataset,inp_label,init_dir)
     
-    # for inp_dataset in dataset:
-    #     merge(inp_dataset,init_dir) 
-
     for inp_dataset in dataset:
-        extractMentionGraphs(inp_dataset,init_dir) 
+         extractMentionGraphs(inp_dataset,label,init_dir) 
     
     for inp_dataset in dataset:
         postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
