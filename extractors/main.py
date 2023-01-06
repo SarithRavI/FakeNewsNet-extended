@@ -13,6 +13,7 @@ import shutil
 import argparse
 from enum import Enum
 
+
 class Dataset(Enum):
     GOS = "gossipcop"
     POL = "politifact"
@@ -100,7 +101,7 @@ def postProcessTextFeatures(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
     config["dump_location"] = "../../transformers/tweet_features/{}".format(config["dataset"])
-    create_dir("../../transformers")
+    create_dir("../transformers/tweet_features")
     postProcessing = PostData(config)
     postProcessing.processTweetData()
 
@@ -194,7 +195,7 @@ def main():
     # merge() - not done 
     # extractMentionGraphs() -done
                        
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
 
 
