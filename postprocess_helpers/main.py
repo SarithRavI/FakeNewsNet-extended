@@ -4,7 +4,7 @@ from util.createUser_News_bow import createUser_News_bow
 from FillMissingProfileTimeline import fillMissingProfileTimeline
 from TweetNodeMapping import TweetNodeMapper
 from ExtractMentionGraphIndex import ExtractMentionGraphIndex
-from util import createNode_User_News_Mapping
+from util import createNode_User_News_Mapping, createNode_News_Mapping
 
 import os
 import shutil
@@ -80,6 +80,13 @@ def createNodeUserNewsMapping(dataset,init_dir):
               }
         createNode_User_News_Mapping.createNodeUserNewsMapping(config)
 
+def createNodeNewsMapping(dataset,init_dir):
+        config = {
+              'dataset':dataset,
+              'init_dir_root': init_dir
+              }
+        createNode_News_Mapping.createNodeNewsMapping(config)
+
 
 def main():
     dataset = None 
@@ -134,6 +141,7 @@ def main():
     for inp_dataset in dataset:
         # gossipcop real
         createNodeUserNewsMapping(inp_dataset,init_dir) 
+        createNodeNewsMapping(inp_dataset,init_dir)
     
     for inp_dataset in dataset:
         for inp_label in label:
