@@ -3,7 +3,8 @@ import numpy as np
 import json
 from multiprocessing.pool import Pool
 from tqdm import tqdm
-from util.SentimentAnalysis import SentimentAnalyzer
+from .util.SentimentAnalysis import SentimentAnalyzer
+from .util.util import create_dir
 import spacy
 
 class PostData:
@@ -103,10 +104,10 @@ class PostData:
             label_node_tweetData["subjectivity"] =res_np[:,8]
 
             # label_node_tweetData["subjectivity"] =res_np[:,9]
-            
-            label_node_tweetData.to_csv("{}/{}_{}_textual_features.csv".format(self.config["dump_location"],
-                                                                               self.config["dataset"][:3], self.label),
-                                        index=False)
+            target_root = self.config["dump_location"]
+            create_dir(target_root)
+            target = "{}/{}_{}_textual_features.csv".format(target_root,self.config["dataset"][:3], self.label)
+            label_node_tweetData.to_csv(target,index=False)
 
     def processSpacy(self):
         all_news_node = pd.read_csv("{}/{}_node_user_news_mapping.csv".format(self.config["root_node_user_mapping"],
@@ -138,7 +139,8 @@ class PostData:
             res_np = np.array(res)
 
             print("Here I print: ", res_np.shape)
-
-            np.save("{}/{}_{}_textual_features_spacy.npy".format(self.config["dump_location"],self.config["dataset"][:3],self.label),
+            target_root = self.config["dump_location"]
+            create_dir(target_root)
+            np.save("{}/{}_{}_textual_features_spacy.npy".format(target_root,self.config["dataset"][:3],self.label),
                                                                                res_np)
         
