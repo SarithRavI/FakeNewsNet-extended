@@ -5,6 +5,7 @@ from FillMissingProfileTimeline import fillMissingProfileTimeline
 from TweetNodeMapping import TweetNodeMapper
 from ExtractMentionGraphIndex import ExtractMentionGraphIndex
 from util import createNode_User_News_Mapping, createNode_News_Mapping
+from extractors.textExtractors.PostprocessTextData import PostData
 
 import os
 import shutil
@@ -88,6 +89,33 @@ def createNodeNewsMapping(dataset,init_dir):
         createNode_News_Mapping.createNodeNewsMapping(config)
 
 
+def postProcessTextFeatures(ds,label_ls,init_dir):  # type is vis or spacy
+    config = {
+              "dataset": ds,
+              "label_ls":label_ls,
+              "num_process": 4,
+              }
+    config["root_tweet_node_mapping"] = f"{init_dir}/tweet_node_mapping" 
+    config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
+    config["root_upfd_data"] = "../code/upfd_dataset"
+    config["dump_location"] = "../../transformers/tweet_features/{}".format(config["dataset"])
+    postProcessing = PostData(config)
+    postProcessing.processTweetData()
+
+def postProcessSpacyEmbeddings(ds,label_ls,init_dir):  # type is vis or spacy
+    config = {
+              "dataset": ds,
+              "label_ls":label_ls,
+              "num_process": 4,
+              }
+    config["root_tweet_node_mapping"] = f"{init_dir}/tweet_node_mapping" 
+    config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
+    config["root_upfd_data"] = "../code/upfd_dataset"
+    config["dump_location"] = "../../transformers/spacy_embeddings/{}".format(config["dataset"])
+
+    postProcessing = PostData(config)
+    postProcessing.processSpacy()
+ 
 def main():
     dataset = None 
     label = None 
@@ -96,6 +124,7 @@ def main():
                         help='which dataset to be used: pol for politifact. gos for gossipcop')
     parser.add_argument('--label', type=str, default=Label.REAL.value,
                         help='Indicate the label: real for true label. fake for false label')
+    # provide the full path
     parser.add_argument('--init_dir_root', type=str,
                         help='root path of init_dir folder')
     parser.add_argument('--testing', type=str,
@@ -155,6 +184,10 @@ def main():
 
     for inp_dataset in dataset:
         extractMentionGraphs(inp_dataset,init_dir) 
+    
+    for inp_dataset in dataset:
+        postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
+        postProcessSpacyEmbeddings(inp_dataset,label_ls=label,init_dir=init_dir)
 
     # run postprocess_helpers\util\createNode_User_News_Mapping.py -done
     # mapTweetNode() -done

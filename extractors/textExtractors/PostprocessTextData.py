@@ -10,6 +10,7 @@ class PostData:
     def __init__(self, config):
         self.config = config
         self.label = None
+        self.label_ls = config["label_ls"]
         self.nlp = spacy.load('en_core_web_md')
 
     def collectSpacy(self, label_node_tweet_news_row):
@@ -61,12 +62,12 @@ class PostData:
         except Exception as ex:
             print("{}".format(ex))
 
-    def processVisData(self):
+    def processTweetData(self):
         all_news_node = pd.read_csv("{}/{}_node_user_news_mapping.csv".format(self.config["root_node_user_mapping"],
                                                                               self.config["dataset"][:3]))
         all_news_node.drop(["user_id"], axis=1, inplace=True)
 
-        for label in ["real", "fake"]:
+        for label in self.label_ls:
             self.label = label
             label_node_tweetData = pd.DataFrame()
             label_node_tweet = pd.read_csv("{}/df_{}_{}.csv".format(self.config["root_tweet_node_mapping"],
@@ -103,7 +104,7 @@ class PostData:
 
             # label_node_tweetData["subjectivity"] =res_np[:,9]
             
-            label_node_tweetData.to_csv("{}/{}_{}_textual_features.csv".format(self.config["dump_location_vis"],
+            label_node_tweetData.to_csv("{}/{}_{}_textual_features.csv".format(self.config["dump_location"],
                                                                                self.config["dataset"][:3], self.label),
                                         index=False)
 
@@ -112,7 +113,7 @@ class PostData:
                                                                               self.config["dataset"][:3]))
         all_news_node.drop(["user_id"], axis=1, inplace=True)
 
-        for label in ["real", "fake"]:
+        for label in self.label_ls:
             self.label = label
             label_node_tweetData = pd.DataFrame()
             label_node_tweet = pd.read_csv("{}/df_{}_{}.csv".format(self.config["root_tweet_node_mapping"],
@@ -138,6 +139,6 @@ class PostData:
 
             print("Here I print: ", res_np.shape)
 
-            np.save("{}/{}_{}_textual_features_spacy.npy".format(self.config["dump_location_vis"],self.config["dataset"][:3],self.label),
+            np.save("{}/{}_{}_textual_features_spacy.npy".format(self.config["dump_location"],self.config["dataset"][:3],self.label),
                                                                                res_np)
         
