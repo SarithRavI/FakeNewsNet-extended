@@ -5,7 +5,8 @@ from FillMissingProfileTimeline import fillMissingProfileTimeline
 from TweetNodeMapping import TweetNodeMapper
 from ExtractMentionGraphIndex import ExtractMentionGraphIndex
 from util import createNode_User_News_Mapping, createNode_News_Mapping
-from extractors.textExtractors.PostprocessTextData import PostData
+from util.util import create_dir
+from textExtractors.PostprocessTextData import PostData
 
 import os
 import shutil
@@ -99,6 +100,7 @@ def postProcessTextFeatures(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
     config["dump_location"] = "../../transformers/tweet_features/{}".format(config["dataset"])
+    create_dir("../../transformers")
     postProcessing = PostData(config)
     postProcessing.processTweetData()
 
@@ -112,7 +114,7 @@ def postProcessSpacyEmbeddings(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
     config["dump_location"] = "../../transformers/spacy_embeddings/{}".format(config["dataset"])
-
+    create_dir("../transformers/spacy_embeddings")
     postProcessing = PostData(config)
     postProcessing.processSpacy()
  
