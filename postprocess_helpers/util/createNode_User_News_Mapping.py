@@ -1,14 +1,6 @@
 import pandas as pd
-import numpy as np
-from datetime import datetime
-import json
 import pickle
-import os.path as osp
 from tqdm import tqdm
-
-# Fill following
-# dataset name
-
 
 def createNodeUserNewsMapping(config):
     dataset = config['dataset']
