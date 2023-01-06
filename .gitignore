@@ -1,6 +1,6 @@
 # local
 code/upfd_dataset
-postprocess_helpers/init_dir
+extractors/init_dir
 code/resources/tweet_keys_file-copy.json
 *.out
 
