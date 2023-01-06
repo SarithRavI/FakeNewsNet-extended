@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "C:/Users/MSI/anaconda3/envs/fastApi-dataScience/python",
+        "./postprocessor"
+    ]
+}
