@@ -33,6 +33,9 @@ tinysegmenter
 tldextract
 vaderSentiment
 tqdm
+torch
+torchaudio
+torchvision
 twython
 urllib3
 Werkzeug
