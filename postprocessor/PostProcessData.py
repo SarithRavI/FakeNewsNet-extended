@@ -103,7 +103,7 @@ class PostData:
 
             # label_node_tweetData["subjectivity"] =res_np[:,9]
             
-            label_node_tweetData.to_csv("{}/{}_{}_textual_features_spacy.csv".format(self.config["dump_location_vis"],
+            label_node_tweetData.to_csv("{}/{}_{}_textual_features.csv".format(self.config["dump_location_vis"],
                                                                                self.config["dataset"][:3], self.label),
                                         index=False)
 
