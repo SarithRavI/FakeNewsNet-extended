@@ -137,8 +137,10 @@ class PostData:
             pool.join()
 
             res_np = np.array(res)
-
+            print(res_np.shape)
+            
             target_root = self.config["dump_location"]
+            print(os.path.join(target_root,"{}_{}_textual_features_spacy.npy".format(self.config["dataset"][:3],self.label)))
             np.save(os.path.join(target_root,"{}_{}_textual_features_spacy.npy".format(self.config["dataset"][:3],self.label)),
                                                                                res_np)
         
