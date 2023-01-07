@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import json
@@ -105,8 +106,7 @@ class PostData:
 
             # label_node_tweetData["subjectivity"] =res_np[:,9]
             target_root = self.config["dump_location"]
-            create_dir(target_root)
-            target = "{}/{}_{}_textual_features.csv".format(target_root,self.config["dataset"][:3], self.label)
+            target = os.path.join(target_root,"{}_{}_textual_features.csv".format(self.config["dataset"][:3], self.label))
             label_node_tweetData.to_csv(target,index=False)
 
     def processSpacy(self):
@@ -138,9 +138,7 @@ class PostData:
 
             res_np = np.array(res)
 
-            print("Here I print: ", res_np.shape)
             target_root = self.config["dump_location"]
-            create_dir(target_root)
-            np.save("{}/{}_{}_textual_features_spacy.npy".format(target_root,self.config["dataset"][:3],self.label),
+            np.save(os.path.join(target_root,"{}_{}_textual_features_spacy.npy".format(self.config["dataset"][:3],self.label)),
                                                                                res_np)
         

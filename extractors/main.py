@@ -100,8 +100,9 @@ def postProcessTextFeatures(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_tweet_node_mapping"] = f"{init_dir}/tweet_node_mapping" 
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
-    config["dump_location"] = "../../transformers/tweet_features/{}".format(config["dataset"])
+    config["dump_location"] = os.path.abspath("../../transformers/tweet_features/{}".format(config["dataset"]))
     create_dir("../transformers/tweet_features")
+    create_dir("../transformers/tweet_features/{}".format(config["dataset"]))
     postProcessing = PostData(config)
     postProcessing.processTweetData()
 
@@ -114,8 +115,9 @@ def postProcessSpacyEmbeddings(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_tweet_node_mapping"] = f"{init_dir}/tweet_node_mapping" 
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
-    config["dump_location"] = "../../transformers/spacy_embeddings/{}".format(config["dataset"])
+    config["dump_location"] = os.path.abspath("../../transformers/spacy_embeddings/{}".format(config["dataset"]))
     create_dir("../transformers/spacy_embeddings")
+    create_dir("../transformers/spacy_embeddings/{}".format(config["dataset"]))
     postProcessing = PostData(config)
     postProcessing.processSpacy()
  
@@ -170,22 +172,22 @@ def main():
         for file in os.listdir('util/pkl_files'):
             shutil.copy2(f'util/pkl_files/{file}',f'{init_dir}/pkl_files')
 
-    for inp_dataset in dataset:
-        createNodeUserNewsMapping(inp_dataset,init_dir) 
-        createNodeNewsMapping(inp_dataset,init_dir)
+    # for inp_dataset in dataset:
+    #     createNodeUserNewsMapping(inp_dataset,init_dir) 
+    #     createNodeNewsMapping(inp_dataset,init_dir)
+    
+    # for inp_dataset in dataset:
+    #     for inp_label in label:
+    #         merge(inp_dataset,inp_label,init_dir) 
+    #         mapTweetNode(inp_dataset,inp_label,init_dir) 
+    #         createBow(inp_dataset,inp_label,init_dir)
+    #         fillMissing(inp_dataset,inp_label,init_dir)
+    
+    # for inp_dataset in dataset:
+    #      extractMentionGraphs(inp_dataset,label,init_dir) 
     
     for inp_dataset in dataset:
-        for inp_label in label:
-            merge(inp_dataset,inp_label,init_dir) 
-            mapTweetNode(inp_dataset,inp_label,init_dir) 
-            createBow(inp_dataset,inp_label,init_dir)
-            fillMissing(inp_dataset,inp_label,init_dir)
-    
-    for inp_dataset in dataset:
-         extractMentionGraphs(inp_dataset,label,init_dir) 
-    
-    for inp_dataset in dataset:
-        postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
+        # postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
         postProcessSpacyEmbeddings(inp_dataset,label_ls=label,init_dir=init_dir)
 
     # run postprocess_helpers\util\createNode_User_News_Mapping.py -done
