@@ -100,7 +100,7 @@ def postProcessTextFeatures(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_tweet_node_mapping"] = f"{init_dir}/tweet_node_mapping" 
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
-    config["dump_location"] = os.path.abspath("../../transformers/tweet_features/{}".format(config["dataset"]))
+    config["dump_location"] = os.path.abspath("../transformers/tweet_features/{}".format(config["dataset"]))
     create_dir("../transformers/tweet_features")
     create_dir("../transformers/tweet_features/{}".format(config["dataset"]))
     postProcessing = PostData(config)
@@ -115,7 +115,7 @@ def postProcessSpacyEmbeddings(ds,label_ls,init_dir):  # type is vis or spacy
     config["root_tweet_node_mapping"] = f"{init_dir}/tweet_node_mapping" 
     config["root_node_user_mapping"] = f"{init_dir}/node_user_mappings"
     config["root_upfd_data"] = "../code/upfd_dataset"
-    config["dump_location"] = os.path.abspath("../../transformers/spacy_embeddings/{}".format(config["dataset"]))
+    config["dump_location"] = os.path.abspath("../transformers/spacy_embeddings/{}".format(config["dataset"]))
     create_dir("../transformers/spacy_embeddings")
     create_dir("../transformers/spacy_embeddings/{}".format(config["dataset"]))
     postProcessing = PostData(config)
@@ -127,7 +127,8 @@ def postProcessMentionGraphFeatures(ds,label_ls,init_dir):  # type is vis or spa
               "label_ls":label_ls,
               }
     config["root_mention_graphs"] = f"{init_dir}/news_user_mention_graph" 
-    config["dump_location"] = os.path.abspath("../../transformers/mg_features/{}".format(config["dataset"]))
+    config["dump_location"] = os.path.abspath("../transformers/mg_features/{}".format(config["dataset"]))
+    print(config["dump_location"])
     create_dir("../transformers/mg_features")
     create_dir("../transformers/mg_features/{}".format(config["dataset"]))
     postProcessing = PostprocessMentionGraphData.PostData(config)

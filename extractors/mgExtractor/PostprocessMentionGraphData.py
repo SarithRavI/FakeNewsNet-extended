@@ -11,7 +11,7 @@ class PostData:
     
     def processMG(self):
         dataset = self.config['dataset']
-        label_ls = self.config['label']
+        label_ls = self.config['label_ls']
         for label in label_ls:
             mg_features_df = pd.DataFrame()
             mg_raw_df = pd.read_csv(f"{self.config['root_mention_graphs']}/{dataset[:3]}_{label}_news_mentionGraph.csv")
@@ -77,6 +77,6 @@ class PostData:
                     mg_features_df = mg_features_df.append(user_mg_feature,ignore_index=True)  
 
             target_root = self.config["dump_location"]
-            target = os.path.join(target_root,"{}_{}_mg_features.csv".format(self.config["dataset"][:3], self.config['label']))
+            target = os.path.join(target_root,"{}_{}_mg_features.csv".format(self.config["dataset"][:3], label))
             mg_features_df.to_csv(target,index=False)
         
