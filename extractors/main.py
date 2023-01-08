@@ -201,6 +201,7 @@ def main():
     for inp_dataset in dataset:
         postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
         postProcessSpacyEmbeddings(inp_dataset,label_ls=label,init_dir=init_dir)
+        postProcessMentionGraphFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
 
     # run postprocess_helpers\util\createNode_User_News_Mapping.py -done
     # mapTweetNode() -done
