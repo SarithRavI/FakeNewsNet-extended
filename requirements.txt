@@ -25,6 +25,8 @@ PyYAML
 requests
 requests-file
 requests-oauthlib
+scikit-learn
+scipy
 singledispatch
 six
 soupsieve
