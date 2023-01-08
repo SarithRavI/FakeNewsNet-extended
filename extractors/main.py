@@ -172,22 +172,22 @@ def main():
         for file in os.listdir('util/pkl_files'):
             shutil.copy2(f'util/pkl_files/{file}',f'{init_dir}/pkl_files')
 
-    # for inp_dataset in dataset:
-    #     createNodeUserNewsMapping(inp_dataset,init_dir) 
-    #     createNodeNewsMapping(inp_dataset,init_dir)
-    
-    # for inp_dataset in dataset:
-    #     for inp_label in label:
-    #         merge(inp_dataset,inp_label,init_dir) 
-    #         mapTweetNode(inp_dataset,inp_label,init_dir) 
-    #         createBow(inp_dataset,inp_label,init_dir)
-    #         fillMissing(inp_dataset,inp_label,init_dir)
-    
-    # for inp_dataset in dataset:
-    #      extractMentionGraphs(inp_dataset,label,init_dir) 
+    for inp_dataset in dataset:
+        createNodeUserNewsMapping(inp_dataset,init_dir) 
+        createNodeNewsMapping(inp_dataset,init_dir)
     
     for inp_dataset in dataset:
-        # postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
+        for inp_label in label:
+            merge(inp_dataset,inp_label,init_dir) 
+            mapTweetNode(inp_dataset,inp_label,init_dir) 
+            createBow(inp_dataset,inp_label,init_dir)
+            fillMissing(inp_dataset,inp_label,init_dir)
+    
+    for inp_dataset in dataset:
+         extractMentionGraphs(inp_dataset,label,init_dir) 
+    
+    for inp_dataset in dataset:
+        postProcessTextFeatures(inp_dataset,label_ls=label,init_dir=init_dir)
         postProcessSpacyEmbeddings(inp_dataset,label_ls=label,init_dir=init_dir)
 
     # run postprocess_helpers\util\createNode_User_News_Mapping.py -done
