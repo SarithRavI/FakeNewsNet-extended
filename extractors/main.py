@@ -7,7 +7,7 @@ from ExtractMentionGraphIndex import ExtractMentionGraphIndex
 from util import createNode_User_News_Mapping, createNode_News_Mapping
 from util.util import create_dir
 from textExtractors.PostprocessTextData import PostData
-
+from mgExtractor import PostprocessMentionGraphData
 import os
 import shutil
 import argparse
@@ -120,6 +120,18 @@ def postProcessSpacyEmbeddings(ds,label_ls,init_dir):  # type is vis or spacy
     create_dir("../transformers/spacy_embeddings/{}".format(config["dataset"]))
     postProcessing = PostData(config)
     postProcessing.processSpacy()
+
+def postProcessMentionGraphFeatures(ds,label_ls,init_dir):  # type is vis or spacy
+    config = {
+              "dataset": ds,
+              "label_ls":label_ls,
+              }
+    config["root_mention_graphs"] = f"{init_dir}/news_user_mention_graph" 
+    config["dump_location"] = os.path.abspath("../../transformers/mg_features/{}".format(config["dataset"]))
+    create_dir("../transformers/mg_features")
+    create_dir("../transformers/mg_features/{}".format(config["dataset"]))
+    postProcessing = PostprocessMentionGraphData.PostData(config)
+    postProcessing.processMG()
  
 def main():
     dataset = None 
