@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import MinMaxScaler
-import scipy.sparse 
 import os
 
+from util import doImpute, ScaleToRange, saveDf,  saveCompound
 root_node_user_mappings = "../utils/node_user_mappings"
 root_node_article_mappings = "../utils/node_article_mappings"
 root_news = "../code/upfd_dataset"
@@ -17,33 +15,6 @@ def addNan(df,news_node):
         df.loc[new_node] = [np.nan]*len(df.columns)
     df.sort_index(inplace=True)
     return df
-
-def doImpute(df):
-    imputer= SimpleImputer(strategy="median")
-    imputer.fit(df)
-    x = imputer.transform(df)
-    return x
-
-def ScaleToRange(df):
-    min_max_scaler = MinMaxScaler()
-    #min_max_scaler.fit(df)
-    return pd.DataFrame(min_max_scaler.fit_transform(df),
-                       columns = df.columns,
-                       index = df.index)
-def saveDf(df,loc):
-    x= df.to_numpy()
-    sparse_matrix = scipy.sparse.csr_matrix(x)
-    scipy.sparse.save_npz('{}.npz'.format(loc), sparse_matrix)
-    df.to_csv("{}.csv".format(loc))
-
-def saveCompound(df,dataset,loc):
-    x = df.to_numpy()
-    X_u = scipy.sparse.load_npz("../../../UPFD/{}/new_profile_feature.npz".format(dataset)).todense().astype(np.float32)
-    all_x = np.hstack((X_u,x))
-    # print(x.shape)
-    # print(X_u.shape)
-    sparse_matrix = scipy.sparse.csr_matrix(all_x)
-    scipy.sparse.save_npz('{}.npz'.format(loc), sparse_matrix)
 
 def extract_pg_data(ds):
     dataset =ds
