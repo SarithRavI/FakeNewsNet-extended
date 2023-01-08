@@ -3,6 +3,7 @@ code/upfd_dataset
 extractors/init_dir
 transformers/tweet_features
 transformers/spacy_embeddings
+transformers/mg_features
 code/resources/tweet_keys_file-copy.json
 *.out
 
